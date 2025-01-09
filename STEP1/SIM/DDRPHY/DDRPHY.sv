@@ -11,39 +11,23 @@ module DDRPHY
     DFI_WR_IF.DST                   dfi_wr_if,
     DFI_RD_IF.SRC                   dfi_rd_if,
 
-    // command and address
-    output  logic                   ck,
-    output  logic                   ck_n,
-    output  logic                   cke,
-    output  logic   [`DRAM_CS_WIDTH-1:0]    cs_n,
-    output  logic                   ras_n,
-    output  logic                   cas_n,
-    output  logic                   we_n,
-    output  logic   [`DRAM_BA_WIDTH-1:0]    ba,
-    output  logic   [`DRAM_ADDR_WIDTH-1:0]  addr,
-    output  logic                   odt,
-
-    //data
-    inout   logic   [63:0]          dq,
-    inout   logic   [7:0]           dqs,
-    inout   logic   [7:0]           dqs_n,
-    inout   logic   [7:0]           dm_rdqs,
-    input   logic   [7:0]           rdqs_n
+    // DDR interface
+    DDR_IF.DDRPHY                   ddr_if
 );
 
-    assign  ck                      = clk;
-    assign  ck_n                    = ~clk;
+    assign  ddr_if.ck               = clk;
+    assign  ddr_if.ck_n             = ~clk;
 
     // delay control signals by a half cycle to align the signals
     always_ff @(negedge clk) begin  // NEGedge
-        cke                         <= dfi_ctrl_if.cke;
-        cs_n                        <= dfi_ctrl_if.cs_n;
-        ras_n                       <= dfi_ctrl_if.ras_n;
-        cas_n                       <= dfi_ctrl_if.cas_n;
-        we_n                        <= dfi_ctrl_if.we_n;
-        ba                          <= dfi_ctrl_if.ba;
-        addr                        <= dfi_ctrl_if.addr;
-        odt                         <= dfi_ctrl_if.odt;
+        ddr_if.cke                  <= dfi_ctrl_if.cke;
+        ddr_if.cs_n                 <= dfi_ctrl_if.cs_n;
+        ddr_if.ras_n                <= dfi_ctrl_if.ras_n;
+        ddr_if.cas_n                <= dfi_ctrl_if.cas_n;
+        ddr_if.we_n                 <= dfi_ctrl_if.we_n;
+        ddr_if.ba                   <= dfi_ctrl_if.ba;
+        ddr_if.addr                 <= dfi_ctrl_if.addr;
+        ddr_if.odt                  <= dfi_ctrl_if.odt;
     end
 
     //----------------------------------------------------------
@@ -52,6 +36,8 @@ module DDRPHY
     logic                           wren,       wren_d1;
     logic   [127:0]                 wdata;
     logic   [15:0]                  wmask;
+    logic   [63:0]                  dq_out;
+    logic   [7:0]                   dm_rdqs_out;
 
     always_ff @(posedge clk) begin
         wren                        <= dfi_wr_if.wrdata_en;
@@ -60,21 +46,25 @@ module DDRPHY
         wmask                       <= dfi_wr_if.wrdata_mask;
     end
 
-    //
     wire    [63:0]                  wdata_ddr;
+    wire    [7:0]                   wmask_ddr;
     assign  wdata_ddr               = clk ? wdata[127:64] : wdata[63:0];
     assign  wmask_ddr               = clk ? wmask[15:8] : wmask[7:0];
 
-    assign  dqs                     =  (wren & !wren_d1)
+    assign  ddr_if.dqs              =  (wren & !wren_d1)
                                      ? 8'h00 // preamble
                                      : (wren_d1) ? {8{clk}}
                                               : 8'hz;
-    assign  dqs_n                   =  (wren & !wren_d1)
+    assign  ddr_if.dqs_n            =  (wren & !wren_d1)
                                      ? 8'hFF // preamble
                                      : (wren_d1) ? {8{~clk}}
                                               : 8'hz;
-    assign  #(`CLK_PERIOD*3/4)  dq  = wren ? wdata_ddr : 'hz;
-    assign  #(`CLK_PERIOD*3/4)  dm_rdqs = wren ? wmask_ddr : 'hz;
+    always @(*) begin
+        dq_out                      <= #(`CLK_PERIOD*3/4) wren ? wdata_ddr : 'hz;
+        dm_rdqs_out                 <= #(`CLK_PERIOD*3/4) wren ? wmask_ddr : 'hz;
+    end
+    assign  ddr_if.dq               = dq_out;
+    assign  ddr_if.dm_rdqs          = dm_rdqs_out;
 
     //----------------------------------------------------------
     // Read path
@@ -89,17 +79,17 @@ module DDRPHY
     end
 
     logic                           clean_rdqs;
-    assign  clean_rdqs              = dqs[0] & rden_neg_d;
+    assign  clean_rdqs              =  ddr_if.dqs[0] & rden_neg_d;
 
     //----------------------------------------------------------
     // Capture DQ using clean DQS
     logic   [63:0]                  rdata_posedge,
                                     rdata_negedge;
     always_ff @(posedge clean_rdqs) begin
-        rdata_posedge               <= dq;
+        rdata_posedge               <=  ddr_if.dq;
     end
     always_ff @(negedge clean_rdqs) begin
-        rdata_negedge               <= dq;
+        rdata_negedge               <=  ddr_if.dq;
     end
 
     //----------------------------------------------------------

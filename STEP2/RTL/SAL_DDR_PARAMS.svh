@@ -125,9 +125,9 @@ typedef logic   [`MC_SEQ_NUM_WIDTH-1:0] seq_num_t;
 // Address mapping
 //----------------------------------------------------------
 // 10987654321098765432109876543210
-//         -------------        ---
-//            row               offset (3-bit for 64-DQ (or 8B))
-//                      --------
+//                  --          ---
+//                 bank       offset (3-bit for 64-DQ (or 8B))
+//     -------------  ----------
 //                       column (8-bit)
 function dram_ba_t get_dram_ba(
     input   axi_addr_t          addr

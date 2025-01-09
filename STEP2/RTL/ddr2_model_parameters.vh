@@ -25,6 +25,9 @@
 *
 ****************************************************************************************/
 
+`ifndef DDR2_MODEL_PARAMETERS
+`define DDR2_MODEL_PARAMETERS
+
     // Timing parameters based on Speed Grade
 
                                           // SYMBOL UNITS DESCRIPTION
@@ -1397,3 +1400,4 @@
     parameter WDQS_PRE         =       1; // DQS half clock periods prior to first write strobe
     parameter WDQS_PST         =       1; // DQS half clock periods after last valid write strobe
 
+`endif  // DDR2_MODEL_PARAMETERS

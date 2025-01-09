@@ -127,12 +127,51 @@ interface REQ_IF
     // synthesis translate_on
 endinterface
 
-interface SCHED_IF ();
+
+typedef struct packed {
     logic                       act_req;
     logic                       rd_req;
     logic                       wr_req;
     logic                       pre_req;
     logic                       ref_req;
+    dram_ba_t                   ba;
+    dram_ra_t                   ra;
+    dram_ca_t                   ca;
+    seq_num_t                   seq_num;
+    axi_id_t                    id;
+    axi_len_t                   len;
+} bk_req_t;
+
+typedef struct packed {
+    logic                       act_gnt;
+    logic                       rd_gnt;
+    logic                       wr_gnt;
+    logic                       pre_gnt;
+    logic                       ref_gnt;
+} bk_gnt_t;
+
+interface BK_CTRL_IF #(
+    parameter   BK_CNT = 1
+);
+    bk_req_t [BK_CNT-1:0]       reqs;
+    bk_gnt_t [BK_CNT-1:0]       gnts;
+
+    // synthesizable, for design
+    modport BK ( // requests to the scheduler (not be used)
+        output                  reqs,
+        input                   gnts
+    );
+    modport SCHED ( // grants to bank controllers
+        input                   reqs,
+        output                  gnts
+    );
+    modport MON (
+        input                   reqs,
+        input                   gnts 
+    );
+endinterface
+
+interface SCHED_IF ();
     logic                       act_gnt;
     logic                       rd_gnt;
     logic                       wr_gnt;
@@ -141,20 +180,29 @@ interface SCHED_IF ();
     dram_ba_t                   ba;
     dram_ra_t                   ra;
     dram_ca_t                   ca;
+    seq_num_t                   seq_num;
     axi_id_t                    id;
     axi_len_t                   len;
 
     // synthesizable, for design
-    modport SRC (
-        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
-        input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
-    );
-    modport DST (
-        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
+    modport SCHED (
+        output                  ba, ra, ca, id, len,
         output                  act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
+    modport CTRL_ENCODER (
+        input                   ba, ra, ca,
+        output                  act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
+    );
+    
+    modport RD_CTRL (
+        input                   id, len,
+        input                   rd_gnt
+    );
+    modport WR_CTRL (
+        input                   wr_gnt
+    );
     modport MON (
-        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
+        input                   ba, ra, ca, id, len,
         input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
 endinterface

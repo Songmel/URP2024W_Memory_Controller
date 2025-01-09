@@ -14,7 +14,7 @@ module SAL_WR_CTRL
     TIMING_IF.MON               timing_if,
 
     // scheduling output
-    SCHED_IF.MON                sched_if,
+    SCHED_IF.WR_CTRL            sched_if,
 
     // write data to DDR PHY
     DFI_WR_IF.SRC               dfi_wr_if

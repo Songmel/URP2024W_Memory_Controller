@@ -13,22 +13,21 @@ module SAL_BK_CTRL
     // request from the address decoder
     REQ_IF.DST                  req_if,
     // scheduling interface
-    SCHED_IF.SRC                sched_if,
+    SCHED_IF.BK_CTRL            sched_if,
 
     // per-bank auto-refresh requests
     input   wire                ref_req_i,
     output  logic               ref_gnt_o
 );
 
-    
-    
+
     /*
     * FILL YOUR CODES HERE
     */
-    
-    
-    
+
+
     always_comb begin
+        
         cur_ra_n                    = cur_ra;
         state_n                     = state;
 
@@ -45,9 +44,8 @@ module SAL_BK_CTRL
         sched_if.ca                 = 'hx;
         sched_if.id                 = 'hx;
         sched_if.len                = 'hx;
-    end
 
+    end
     
-    
-    
+
 endmodule // SAL_BK_CTRL

@@ -114,7 +114,7 @@ interface REQ_IF
 endinterface
 
 interface SCHED_IF ();
-    logic                       act_req;
+    logic                       act_req; // reqs are not used in STEP1
     logic                       rd_req;
     logic                       wr_req;
     logic                       pre_req;
@@ -131,17 +131,27 @@ interface SCHED_IF ();
     logic   [`AXI_LEN_WIDTH-1:0]len;
 
     // synthesizable, for design
-    modport SRC (
-        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
-        input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
-    );
-    modport DST (
-        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
+    // SRC
+    modport BK_CTRL (
+        output                  ba, ra, ca, id, len,
         output                  act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
+    // DST
+    modport CTRL_ENCODER (
+        input                   ba, ra, ca,
+        input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
+    );
+    // MON
     modport MON (
         input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
         input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
+    );
+    modport RD_CTRL (
+        input                   id, len,
+        input                   rd_gnt
+    );
+    modport WR_CTRL (
+        input                   wr_gnt
     );
 endinterface
 

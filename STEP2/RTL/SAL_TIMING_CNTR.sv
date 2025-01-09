@@ -37,7 +37,6 @@ module SAL_TIMING_CNTR
             cntr_n                  = cntr;
     end
 
-    //assign  is_zero_n_o             = (cntr_n == 'd0);
     assign  is_zero_o               = (cntr == 'd0);
 
 endmodule

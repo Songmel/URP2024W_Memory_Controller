@@ -8,7 +8,7 @@ module SAL_CTRL_ENCODER
     input                       rst_n,
 
     // scheduling interface
-    SCHED_IF.DST                sched_if,
+    SCHED_IF.CTRL_ENCODER       sched_if,
 
     // request to DDR PHY
     DFI_CTRL_IF.SRC             dfi_ctrl_if

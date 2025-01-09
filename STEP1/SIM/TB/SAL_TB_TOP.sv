@@ -32,22 +32,7 @@ module SAL_TB_TOP;
     DFI_WR_IF                       dfi_wr_if   (.clk(clk), .rst_n(rst_n));
     DFI_RD_IF                       dfi_rd_if   (.clk(clk), .rst_n(rst_n));
 
-    wire                            ddr_ck;
-    wire                            ddr_ck_n;
-    wire                            ddr_cke;
-    wire    [`DRAM_CS_WIDTH-1:0]    ddr_cs_n;
-    wire                            ddr_ras_n;
-    wire                            ddr_cas_n;
-    wire                            ddr_we_n;
-    wire    [`DRAM_BA_WIDTH-1:0]    ddr_ba;
-    wire    [`DRAM_ADDR_WIDTH-1:0]  ddr_addr;
-    wire                            ddr_odt;
-
-    wire    [63:0]                  ddr_dq;
-    wire    [7:0]                   ddr_dqs;
-    wire    [7:0]                   ddr_dqs_n;
-    wire    [7:0]                   ddr_dm_rdqs;
-    wire    [7:0]                   ddr_rdqs_n;
+    DDR_IF                          ddr_if      ();
 
     SAL_DDR_CTRL                    u_dram_ctrl
     (
@@ -78,68 +63,19 @@ module SAL_TB_TOP;
         .dfi_wr_if                  (dfi_wr_if),
         .dfi_rd_if                  (dfi_rd_if),
 
-        // command and address
-        .ck                         (ddr_ck),
-        .ck_n                       (ddr_ck_n),
-        .cke                        (ddr_cke),
-        .cs_n                       (ddr_cs_n),
-        .ras_n                      (ddr_ras_n),
-        .cas_n                      (ddr_cas_n),
-        .we_n                       (ddr_we_n),
-        .ba                         (ddr_ba),
-        .addr                       (ddr_addr),
-        .odt                        (ddr_odt),
-
-        // data
-        .dq                         (ddr_dq),
-        .dqs                        (ddr_dqs),
-        .dqs_n                      (ddr_dqs_n),
-        .dm_rdqs                    (ddr_dm_rdqs),
-        .rdqs_n                     (ddr_rdqs_n)
+        .ddr_if                     (ddr_if)
     );
 
     ddr2_dimm                       u_rank0
     (
-        // command and address
-        .ck                         (ddr_ck),
-        .ck_n                       (ddr_ck_n),
-        .cke                        (ddr_cke),
-        .cs_n                       (ddr_cs_n[0]),
-        .ras_n                      (ddr_ras_n),
-        .cas_n                      (ddr_cas_n),
-        .we_n                       (ddr_we_n),
-        .ba                         (ddr_ba),
-        .addr                       (ddr_addr),
-        .odt                        (ddr_odt),
-
-        // data
-        .dq                         (ddr_dq),
-        .dqs                        (ddr_dqs),
-        .dqs_n                      (ddr_dqs_n),
-        .dm_rdqs                    (ddr_dm_rdqs),
-        .rdqs_n                     (ddr_rdqs_n)
+        .ddr_if                     (ddr_if),
+        .cs_n                       (ddr_if.cs_n[0])
     );
 
     ddr2_dimm                       u_rank1
     (
-        // command and address
-        .ck                         (ddr_ck),
-        .ck_n                       (ddr_ck_n),
-        .cke                        (ddr_cke),
-        .cs_n                       (ddr_cs_n[1]),
-        .ras_n                      (ddr_ras_n),
-        .cas_n                      (ddr_cas_n),
-        .we_n                       (ddr_we_n),
-        .ba                         (ddr_ba),
-        .addr                       (ddr_addr),
-        .odt                        (ddr_odt),
-
-        // data
-        .dq                         (ddr_dq),
-        .dqs                        (ddr_dqs),
-        .dqs_n                      (ddr_dqs_n),
-        .dm_rdqs                    (ddr_dm_rdqs),
-        .rdqs_n                     (ddr_rdqs_n)
+        .ddr_if                     (ddr_if),
+        .cs_n                       (ddr_if.cs_n[1])
     );
 
     task init();
@@ -155,60 +91,94 @@ module SAL_TB_TOP;
     endtask
 
     logic       [`AXI_ID_WIDTH-1:0]     simple_id;
-    assign  simple_id                   = 'd0;
+    logic   [255:0]             wdata;
+    logic   [255:0]             rdata;
 
     task automatic write32B(
+        input [`AXI_ID_WIDTH-1:0]   wid,
         input [`AXI_ADDR_WIDTH-1:0] addr,
         input [255:0]               data
     );
-        logic   [`AXI_ID_WIDTH-1:0] rid;
         logic   [1:0]               rresp;
-
         // drive to AW and W
         fork
             begin
-                req_if.transfer(simple_id, get_dram_ra(addr), get_dram_ca(addr), 1'b1, 'd1);
+                req_if.transfer(wid, get_dram_ra(addr), get_dram_ca(addr), 1'b1, 'd1);
             end
             begin
-                axi_w_if.transfer(simple_id, data[127:0], 16'hFFFF, 1'b0);
-                axi_w_if.transfer(simple_id, data[255:128], 16'hFFFF, 1'b1);
+                axi_w_if.transfer(wid, data[127:0], 16'hFFFF, 1'b0);
+                axi_w_if.transfer(wid, data[255:128], 16'hFFFF, 1'b1);
             end
         join
     endtask
 
     task automatic read32B(
+        input [`AXI_ID_WIDTH-1:0]   rid_i,
         input [`AXI_ADDR_WIDTH-1:0] addr,
         output [255:0]              data
     );
-        logic   [`AXI_ID_WIDTH-1:0] rid;
+        logic   [`AXI_ID_WIDTH-1:0] rid_o;
         logic   [1:0]               rresp;
         logic                       rlast;
 
         // drive to AR
-        req_if.transfer(simple_id, get_dram_ra(addr), get_dram_ca(addr), 1'b0, 'd1);
+        req_if.transfer(rid_i, get_dram_ra(addr), get_dram_ca(addr), 1'b0, 'd1);
 
         // receive from R
-        axi_r_if.receive(rid, data, rresp, rlast);
-        axi_r_if.receive(rid, data, rresp, rlast);
+        axi_r_if.receive(rid_o, data[127:0], rresp, rlast);
+        axi_r_if.receive(rid_o, data[255:128], rresp, rlast);
+    endtask
+
+    // yoojin
+    task automatic read32Bx2(
+        input [`AXI_ID_WIDTH-1:0]   rid_i1,
+        input [`AXI_ADDR_WIDTH-1:0] addr1,
+        input [`AXI_ID_WIDTH-1:0]   rid_i2,
+        input [`AXI_ADDR_WIDTH-1:0] addr2
+    );
+        logic   [`AXI_ID_WIDTH-1:0] rid_o;
+        logic   [255:0]             data;
+        logic   [1:0]               rresp;
+        logic                       rlast;
+
+        fork
+            begin
+                // drive to AR 1
+                req_if.transfer(rid_i1, get_dram_ra(addr1), get_dram_ca(addr1), 1'b0, 'd1);
+                // drive to AR 2
+                req_if.transfer(rid_i2, get_dram_ra(addr2), get_dram_ca(addr2), 1'b0, 'd1);
+            end
+            begin
+                // receive from R 1
+                axi_r_if.receive(rid_o, data[127:0], rresp, rlast);
+                axi_r_if.receive(rid_o, data[255:128], rresp, rlast);
+                rdata           = data;
+                // receive from R 2
+                axi_r_if.receive(rid_o, data[127:0], rresp, rlast);
+                axi_r_if.receive(rid_o, data[255:128], rresp, rlast);
+                rdata           = data;
+            end
+        join
     endtask
 
 
-    logic   [255:0]             data;
     initial begin
         init();
 
-        write32B('d0,   {8{32'h01234567}});
-        write32B('d32,  {8{32'h01234567}});
-        read32B('d0, data);
-        read32B('d32, data);
+        wdata                   = {256'h1111_1111_2222_2222_3333_3333_4444_4444_5555_5555_6666_6666_7777_7777_8888_8888};
+        write32B('d0, 'd0, wdata); // bank 0, row 0, col 0~3
+        write32B('d1, 'd32, {{4{32'h33663366}}, {4{32'h22442244}}}); // bank 0, row 0, col 4~7
+        read32Bx2('d0, 'd32, 'd1, 'd0); // id1, addr1, id2, addr2
 
         repeat (100) @(posedge clk);
 
-        write32B('d0,   {8{32'h01234567}});
-        write32B('d32,  {8{32'h01234567}});
-        read32B('d0, data);
-        read32B('d32, data);
+        write32B('d2, 'd0,   {8{32'h12345432}}); // bank 0, row 0, col 0~3
+        write32B('d3, 'd32,  {8{32'h10011100}}); // bank 0, row 0, col 4~7
+        read32B('d2, 'd0, rdata);
+        read32B('d3, 'd32, rdata);
 
+        repeat (10) @(posedge clk);
+        $display("Succeed!");
         $finish;
     end
 

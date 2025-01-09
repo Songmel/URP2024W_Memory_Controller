@@ -11,7 +11,7 @@ module SAL_RD_CTRL
     TIMING_IF.MON               timing_if,
 
     // scheduling output
-    SCHED_IF.MON                sched_if,
+    SCHED_IF.RD_CTRL            sched_if,
 
     // read data from DDR PHY
     DFI_RD_IF.DST               dfi_rd_if,
@@ -73,7 +73,7 @@ module SAL_RD_CTRL
             rdata_cnt                   <= 'd0;
         end
         else if (axi_r_if.rvalid & axi_r_if.rready) begin
-            if (& axi_r_if.rlast) begin
+            if (& axi_r_if.rlast) begin // Burst finished. Initialize 
                 rdata_cnt                   <= 'd0;
             end
             else begin
@@ -86,6 +86,15 @@ module SAL_RD_CTRL
     //----------------------------------------------------------
     // read data path
     wire                                rdata_fifo_empty;
+    logic [`AXI_DATA_WIDTH-1:0]         buf_rdata;
+
+    always_ff @(posedge clk) begin
+        if (~rst_n)
+            buf_rdata                   <= 'dx;
+        else
+            buf_rdata                   <= dfi_rd_if.rddata;
+    end
+
     SAL_FIFO
     #(
         .DEPTH_LG2                      (3),
@@ -98,7 +107,7 @@ module SAL_RD_CTRL
         .full_o                         (/* NC */),
         .afull_o                        (/* NC */),
         .wren_i                         (dfi_rd_if.rddata_valid),
-        .wdata_i                        (dfi_rd_if.rddata),
+        .wdata_i                        (buf_rdata),
 
         .empty_o                        (rdata_fifo_empty),
         .aempty_o                       (/* NC */),

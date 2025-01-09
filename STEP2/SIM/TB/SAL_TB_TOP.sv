@@ -33,22 +33,7 @@ module SAL_TB_TOP;
     DFI_WR_IF                       dfi_wr_if   (.clk(clk), .rst_n(rst_n));
     DFI_RD_IF                       dfi_rd_if   (.clk(clk), .rst_n(rst_n));
 
-    wire                            ddr_ck;
-    wire                            ddr_ck_n;
-    wire                            ddr_cke;
-    wire    [`DDR_CS_WIDTH-1:0]     ddr_cs_n;
-    wire                            ddr_ras_n;
-    wire                            ddr_cas_n;
-    wire                            ddr_we_n;
-    wire    [`DDR_BA_WIDTH-1:0]     ddr_ba;
-    wire    [`DDR_ADDR_WIDTH-1:0]   ddr_addr;
-    wire                            ddr_odt;
-
-    wire    [63:0]                  ddr_dq;
-    wire    [7:0]                   ddr_dqs;
-    wire    [7:0]                   ddr_dqs_n;
-    wire    [7:0]                   ddr_dm_rdqs;
-    wire    [7:0]                   ddr_rdqs_n;
+    DDR_IF                          ddr_if      ();
 
     SAL_DDR_CTRL                    u_dram_ctrl
     (
@@ -80,68 +65,19 @@ module SAL_TB_TOP;
         .dfi_wr_if                  (dfi_wr_if),
         .dfi_rd_if                  (dfi_rd_if),
 
-        // command and address
-        .ck                         (ddr_ck),
-        .ck_n                       (ddr_ck_n),
-        .cke                        (ddr_cke),
-        .cs_n                       (ddr_cs_n),
-        .ras_n                      (ddr_ras_n),
-        .cas_n                      (ddr_cas_n),
-        .we_n                       (ddr_we_n),
-        .ba                         (ddr_ba),
-        .addr                       (ddr_addr),
-        .odt                        (ddr_odt),
-
-        // data
-        .dq                         (ddr_dq),
-        .dqs                        (ddr_dqs),
-        .dqs_n                      (ddr_dqs_n),
-        .dm_rdqs                    (ddr_dm_rdqs),
-        .rdqs_n                     (ddr_rdqs_n)
+        .ddr_if                     (ddr_if)
     );
 
     ddr2_dimm                       u_rank0
     (
-        // command and address
-        .ck                         (ddr_ck),
-        .ck_n                       (ddr_ck_n),
-        .cke                        (ddr_cke),
-        .cs_n                       (ddr_cs_n[0]),
-        .ras_n                      (ddr_ras_n),
-        .cas_n                      (ddr_cas_n),
-        .we_n                       (ddr_we_n),
-        .ba                         (ddr_ba),
-        .addr                       (ddr_addr),
-        .odt                        (ddr_odt),
-
-        // data
-        .dq                         (ddr_dq),
-        .dqs                        (ddr_dqs),
-        .dqs_n                      (ddr_dqs_n),
-        .dm_rdqs                    (ddr_dm_rdqs),
-        .rdqs_n                     (ddr_rdqs_n)
+        .ddr_if                     (ddr_if),
+        .cs_n                       (ddr_if.cs_n[0])
     );
 
     ddr2_dimm                       u_rank1
     (
-        // command and address
-        .ck                         (ddr_ck),
-        .ck_n                       (ddr_ck_n),
-        .cke                        (ddr_cke),
-        .cs_n                       (ddr_cs_n[1]),
-        .ras_n                      (ddr_ras_n),
-        .cas_n                      (ddr_cas_n),
-        .we_n                       (ddr_we_n),
-        .ba                         (ddr_ba),
-        .addr                       (ddr_addr),
-        .odt                        (ddr_odt),
-
-        // data
-        .dq                         (ddr_dq),
-        .dqs                        (ddr_dqs),
-        .dqs_n                      (ddr_dqs_n),
-        .dm_rdqs                    (ddr_dm_rdqs),
-        .rdqs_n                     (ddr_rdqs_n)
+        .ddr_if                     (ddr_if),
+        .cs_n                       (ddr_if.cs_n[1])
     );
 
     task init();
@@ -163,7 +99,7 @@ module SAL_TB_TOP;
 
     task automatic write32B (
         input   axi_addr_t          addr,
-        input   [255:0]             data
+        input   [0:255]             data
     );
         axi_id_t                    rid;
         axi_resp_t                  rresp;
@@ -174,8 +110,8 @@ module SAL_TB_TOP;
                 axi_aw_if.send(simple_id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
             end
             begin
-                axi_w_if.send(simple_id, data[127:0], 16'hFFFF, 1'b0);
-                axi_w_if.send(simple_id, data[255:128], 16'hFFFF, 1'b1);
+                axi_w_if.send(simple_id, data[0:127], 16'hFFFF, 1'b0);
+                axi_w_if.send(simple_id, data[128:255], 16'hFFFF, 1'b1);
             end
         join
 
@@ -189,7 +125,7 @@ module SAL_TB_TOP;
 
     task automatic read32B(
         input   axi_addr_t          addr,
-        output  [255:0]             data
+        output  [0:255]             data
     );
         axi_id_t                    rid;
         axi_resp_t                  rresp;
@@ -199,38 +135,46 @@ module SAL_TB_TOP;
         axi_ar_if.send(simple_id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
 
         // receive from R
-        axi_r_if.recv(rid, data, rresp, rlast);
+        axi_r_if.recv(rid, data[0:127], rresp, rlast);
         if (rlast!==1'b0) begin $display("RLAST mismatch (expected: %d, received: %d)", 0, rlast); $finish; end
         if (rid!==simple_id) begin $display("ID mismatch (expected: %d, received: %d)", simple_id, rid); $finish; end
         if (rresp!==2'b00) begin $display("Non-OK response (received: %d)", rresp); $finish; end
 
-        axi_r_if.recv(rid, data, rresp, rlast);
+        axi_r_if.recv(rid, data[128:255], rresp, rlast);
         if (rlast!==1'b1) begin $display("RLAST mismatch (expected: %d, received: %d)", 1, rlast); $finish; end
         if (rid!==simple_id) begin $display("ID mismatch (expected: %d, received: %d)", simple_id, rid); $finish; end
         if (rresp!==2'b00) begin $display("Non-OK response (received: %d)", rresp); $finish; end
     endtask
 
 
-    logic   [255:0]             data;
+    logic   [0:255]             data;
+    logic   [0:255]             wdata;
     initial begin
         init();
 
-        write32B('d0,   {8{32'h01234567}});    // bank 0, row 0, col 0~3
-        write32B('d8200,   {8{32'h01234567}}); // bank 1, row 0, col 0~3
-        write32B('d16400,  {8{32'h99999999}}); // bank 2, row 0, col 0~3
-        write32B('d24600,  {8{32'h88888888}}); // bank 3, row 0, col 0~3
-        write32B('d32800,  {8{32'h77777777}}); // bank 0, row 1, col 4~7
-        write32B('d41000,  {8{32'h11111111}}); // bank 1, row 1, col 4~7
-        read32B('d0, data);                    // bank 0, row 0, col 0~3
-        read32B('d8200, data);                 // bank 1, row 0, col 0~3
+        wdata = 256'h1111_1111_2222_2222_3333_3333_4444_4444_5555_5555_6666_6666_7777_7777_8888_8888;
+        write32B('h0008,    wdata); // bank 0, row 0, col 1,2,3,0
+        write32B('h2000,    wdata); // bank 1, row 0, col 0,1,2,3
+        write32B('h4010,    {8{32'h99999999}}); // bank 2, row 0, col 0~3
+        write32B('h6018,    {8{32'h88888888}}); // bank 3, row 0, col 0~3
+        write32B('h8020,    {8{32'h77777777}}); // bank 0, row 1, col 4~7
+        write32B('hA028,    {8{32'h11111111}}); // bank 1, row 1, col 4~7
+        read32B('h0000, data);                  // bank 0, row 0, col 0,1,2,3
+        read32B('h2000, data);                  // bank 1, row 0, col 0,1,2,3
+        read32B('h2008, data);                  // bank 1, row 0, col 1,2,3,0
+        read32B('h2010, data);                  // bank 1, row 0, col 2,3,0,1
+        read32B('h2018, data);                  // bank 1, row 0, col 3,0,1,2
 
         repeat (100) @(posedge clk);
 
-        write32B('d19000,   {8{32'h01234567}}); // bank 2, row 0, col 144~147
-        write32B('d32,  {8{32'h01234567}});     // bank 0, row 0, col 4~7
-        read32B('d0, data);                     // bank 0, row 0, col 0~3
-        read32B('d32, data);                    // bank 0, row 0, col 4~7
+        write32B('h4A38,    {8{32'h01234567}}); // bank 2, row 0, col 144~147
+        write32B('h0020,    {8{32'h01234567}}); // bank 0, row 0, col 4~7
+        read32B('h0000, data);                  // bank 0, row 0, col 0~3
+        read32B('h0008, data);                  // bank 0, row 0, col 0~3
+        read32B('h0020, data);                  // bank 0, row 0, col 4~7
 
+        repeat (10) @(posedge clk);
+        $display("Succeed!");
         $finish;
     end
 

@@ -18,7 +18,6 @@ module SAL_CFG
     assign  timing_if.t_rp_m2       = `T_RP_VALUE_M1 - 'd1;
     assign  timing_if.t_rfc_m2      = `T_RFC_VALUE_M1 - 'd1;
 
-    assign  timing_if.t_rfc_m1      = `T_RFC_VALUE_M1;
     assign  timing_if.t_rc_m1       = `T_RC_VALUE_M1;
     assign  timing_if.t_rcd_m1      = `T_RCD_VALUE_M1;
     assign  timing_if.t_rp_m1       = `T_RP_VALUE_M1;
