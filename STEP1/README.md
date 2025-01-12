@@ -16,7 +16,7 @@ counter    :   0       | 3 | 2 | 1 |   0   | 0 |     0         | 3 | 2 | 1 | 0 |
 | ------------- | ----------------------------------------------------------------------- | ----------------------------- |
 | S_IDLE        | act_gnt = req_valid & tRC_met;<br /> counter_n = act_gnt ? tRCD-2:'d0;  | S_ACTIVATING on act_gnt       |
 | S_ACTIVATING  | counter_n = counter - 'd1;                                              | S_BANK_ACTIVE on counter=='d0 |
-| S_BANK_ACTIVE | wr_gnt = req_valid & (req_ra==open_ra) & (req_wr==1'b1); <br /> rd_gnt = req_valid & (req_ra==open_ra) & (req_wr==1'b0); <br /> pre_gnt = ( (req_valid & (req_ra!=open_ra)) \| (row_open_cnt=='d0) ) & tRAS_met & tRTP_met & tWTR_met; <br />counter_n = (wr_gnt \| rd_gnt) ? BL/2-'d2 : pre_gnt) ? tRP -'d2 : 'd0;                                           | S_WRITING on wr_gnt <br /> S_READING on rd_gnt <br /> S_PRECHARGING on pre_gnt |
+| S_BANK_ACTIVE | wr_gnt = req_valid & (req_ra==open_ra) & (req_wr==1'b1); <br /> rd_gnt = req_valid & (req_ra==open_ra) & (req_wr==1'b0); <br /> pre_gnt = ( (req_valid & (req_ra!=open_ra)) \| (row_open_cnt=='d0) ) & tRAS_met & tRTP_met & tWTP_met; <br />counter_n = (wr_gnt \| rd_gnt) ? BL/2-'d2 : pre_gnt) ? tRP -'d2 : 'd0;                                           | S_WRITING on wr_gnt <br /> S_READING on rd_gnt <br /> S_PRECHARGING on pre_gnt |
 | S_READING     | counter_n = counter - 'd1                                               | S_BANK_ACTIVE on counter=='d0 |
 | S_WRITING     | counter_n = counter - 'd1                                               | S_BANK_ACTIVE on counter=='d0 |
 | S_PRECHARGING | counter_n = counter - 'd1                                               | S_IDLE on counter=='d0        |
