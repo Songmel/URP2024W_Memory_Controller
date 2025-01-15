@@ -1,0 +1,104 @@
+{
+    "_vcs_unit__305723510": [
+        "_vcs_unit__305723510",
+        "TG3FQ",
+        "module",
+        1
+    ],
+    "std": [
+        "std",
+        "reYIK",
+        "module",
+        2
+    ],
+    "AXI_W_IF": [
+        "AXI_W_IF",
+        "N7E7q",
+        "module",
+        3
+    ],
+    "AXI_R_IF": [
+        "AXI_R_IF",
+        "S9yUK",
+        "module",
+        4
+    ],
+    "APB_IF": [
+        "APB_IF",
+        "UnPdR",
+        "module",
+        5
+    ],
+    "DDR_IF": [
+        "DDR_IF",
+        "AE6YB",
+        "module",
+        6
+    ],
+    "DFI_CTRL_IF": [
+        "DFI_CTRL_IF",
+        "pNfhJ",
+        "module",
+        7
+    ],
+    "DFI_WR_IF": [
+        "DFI_WR_IF",
+        "dPEBV",
+        "module",
+        8
+    ],
+    "DFI_RD_IF": [
+        "DFI_RD_IF",
+        "IwxtL",
+        "module",
+        9
+    ],
+    "TIMING_IF": [
+        "TIMING_IF",
+        "ehwLw",
+        "module",
+        10
+    ],
+    "REQ_IF": [
+        "REQ_IF",
+        "da76F",
+        "module",
+        11
+    ],
+    "SCHED_IF": [
+        "SCHED_IF",
+        "xMrHa",
+        "module",
+        12
+    ],
+    "SAL_DDR_CTRL": [
+        "SAL_DDR_CTRL",
+        "vrVL2",
+        "module",
+        13
+    ],
+    "ddr2_dimm": [
+        "ddr2_dimm",
+        "CaZhW",
+        "module",
+        14
+    ],
+    "ddr2_model": [
+        "ddr2_model",
+        "DPzPT",
+        "module",
+        15
+    ],
+    "SAL_TB_TOP": [
+        "SAL_TB_TOP",
+        "Wb9KV",
+        "module",
+        16
+    ],
+    "...MASTER...": [
+        "SIM",
+        "amcQw",
+        "module",
+        17
+    ]
+}

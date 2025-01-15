@@ -1,0 +1,128 @@
+6        
+0 TIME_SCALE.svh
+0 /usr/synopsys/vcs/R-2020.12-SP1-1/etc/systemverilog/TIME_SCALE.svh
+0 SAL_DDR_PARAMS.svh
+0 /usr/synopsys/vcs/R-2020.12-SP1-1/etc/systemverilog/SAL_DDR_PARAMS.svh
+0 ddr2_model_parameters.vh
+0 /usr/synopsys/vcs/R-2020.12-SP1-1/etc/systemverilog/ddr2_model_parameters.vh
+35
++incdir+/home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL+/home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/SIM/DDRPHY+/home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/SIM/DRAM+/home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/SIM/TB
++itf+/usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/vcsdp_lite.tab
++lint=PCWM
++vcsd1
++vpi
+-Mamsrun=
+-Masflags=
+-Mcc=gcc
+-Mcfl= -pipe -fPIC -O -I/usr/synopsys/vcs/R-2020.12-SP1-1/include
+-Mcplusplus=g++
+-Mcrt0=
+-Mcrtn=
+-Mcsrc=
+-Mexternalobj=
+-Mldflags= -Wl,--no-as-needed -rdynamic
+-Mobjects= /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/libvirsim.so /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/liberrorinf.so /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/libsnpsmalloc.so /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/libvfs.so
+-Mout=simv
+-Msaverestoreobj=/usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/vcs_save_restore_new.o
+-Msyslibs=/usr/synopsys/verdi/R-2020.12-SP1-1/share/PLI/VCS/LINUX64/pli.a -ldl
+-Mvcsaceobjs=
+-Mxcflags= -pipe -fPIC -I/usr/synopsys/vcs/R-2020.12-SP1-1/include
+-Mxllcflags=
+-P
+-Xufe=2steps
+-debug_access+all
+-f /home/rhgksdma/URP2024W_Memory_Controller/script/../script/filelist_step2.f
+-fsdb
+-full64
+-gen_obj
+-kdb
+-picarchive
+-sverilog
+/usr/synopsys/vcs/R-2020.12-SP1-1/linux64/bin/vcs1
+/usr/synopsys/verdi/R-2020.12-SP1-1/share/PLI/VCS/LINUX64/verdi.tab
+/home/rhgksdma/URP2024W_Memory_Controller/script/../script/filelist_step2.f
+50
+_CE_M=
+_CE_CONDA=
+XDG_SESSION_ID=2949
+XDG_RUNTIME_DIR=/run/user/2015
+XDG_DATA_DIRS=/usr/local/share:/usr/share:/var/lib/snapd/desktop
+VMR_MODE_FLAG=64
+VIVADO_HOME=/usr/Vivado/Vivado/2024.1
+VERDI_HOME=/usr/synopsys/verdi/R-2020.12-SP1-1
+VCS_MX_HOME_INTERNAL=1
+VCS_MODE_FLAG=64
+VCS_HOME=/usr/synopsys/vcs/R-2020.12-SP1-1
+VCS_DEPTH=0
+VCS_ARG_ADDED_FOR_TMP=1
+VCS_ARCH=linux64
+UNAME=/bin/uname
+TOOL_HOME=/usr/synopsys/vcs/R-2020.12-SP1-1/linux64
+SSH_TTY=/dev/pts/28
+SSH_CONNECTION=115.145.211.21 49297 115.145.211.247 8002
+SSH_CLIENT=115.145.211.21 49297 8002
+SPYGLASS_HOME=/usr/synopsys/spyglass/P-2019.06-SP2-17/SPYGLASS_HOME
+SNPS_VERDI_INTERNAL_LP_XML_NEW_FLOW=1
+SCRNAME=vcs
+SCRIPT_NAME=vcs
+ROOT_PATH=/home/rhgksdma/URP2024W_Memory_Controller/script/..
+PRIME_HOME=/usr/synopsys/prime/R-2020.09-SP1
+OVA_UUM=0
+LESSOPEN=| /usr/bin/lesspipe %s
+LESSCLOSE=/usr/bin/lesspipe %s %s
+LC_TIME=ko_KR.UTF-8
+LC_TELEPHONE=ko_KR.UTF-8
+LC_PAPER=ko_KR.UTF-8
+LC_NUMERIC=ko_KR.UTF-8
+LC_NAME=ko_KR.UTF-8
+LC_MONETARY=ko_KR.UTF-8
+LC_MEASUREMENT=ko_KR.UTF-8
+LC_IDENTIFICATION=ko_KR.UTF-8
+LC_ALL=C
+LC_ADDRESS=ko_KR.UTF-8
+FM_HOME=/usr/synopsys/fm/R-2020.09-SP1
+EUCLIDE_HOME=/usr/synopsys/eclipse
+DC_HOME=/usr/synopsys/syn/Q-2019.12-SP5-5
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/2015/bus
+CONDA_SHLVL=1
+CONDA_PYTHON_EXE=/compuworks/anaconda3/bin/python
+CONDA_PROMPT_MODIFIER=(base) 
+CONDA_PREFIX=/compuworks/anaconda3
+CONDA_EXE=/compuworks/anaconda3/bin/conda
+CONDA_DEFAULT_ENV=base
+ARM_IP_LIBRARY_PATH=/media/1/ARM/PL401-BU-50000-r1p2-00rel1:/media/1/ARM/catalog/ip/SystemIP/Interconnect/NIC/NIC-400/r1p2
+ARMLMD_LICENSE_FILE=8224@semi-lic.skku.edu
+0
+25
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/SIM/TB/SAL_TB_TOP.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/SIM/DRAM/ddr2_model.v
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/SIM/DRAM/ddr2_dimm.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/SIM/DDRPHY/DDRPHY.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/TIME_SCALE.svh
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/sead32nm_simple.v
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_WR_CTRL.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_TIMING_CNTR.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_SCHED.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_RD_CTRL.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_FIFO.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_DDR_PARAMS.svh
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_DDR_CTRL.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_CTRL_ENCODER.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_CFG.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_BK_CTRL.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/SAL_ADDR_DECODER.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/MC_INTF.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/DFI_INTF.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/DDR_INTF.sv
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/ddr2_model_parameters.vh
+1736921777 /home/rhgksdma/URP2024W_Memory_Controller/script/../STEP2/RTL/AMBA_INTF.sv
+1736921371 /home/rhgksdma/URP2024W_Memory_Controller/script/../script/filelist_step2.f
+1618931515 /usr/synopsys/verdi/R-2020.12-SP1-1/share/PLI/VCS/LINUX64/verdi.tab
+1618974649 /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/vcsdp_lite.tab
+4
+1618976102 /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/libvirsim.so
+1618975343 /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/liberrorinf.so
+1618975120 /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/libsnpsmalloc.so
+1618975339 /usr/synopsys/vcs/R-2020.12-SP1-1/linux64/lib/libvfs.so
+1736922787 simv.daidir
+-1 partitionlib
