@@ -1,0 +1,230 @@
+{
+    "_vcs_unit__1825957180": [
+        "_vcs_unit__1825957180",
+        "ypRBn",
+        "module",
+        1
+    ],
+    "std": [
+        "std",
+        "reYIK",
+        "module",
+        2
+    ],
+    "AXI_A_IF": [
+        "AXI_A_IF",
+        "C4jMJ",
+        "module",
+        3
+    ],
+    "AXI_W_IF": [
+        "AXI_W_IF",
+        "N7E7q",
+        "module",
+        4
+    ],
+    "AXI_B_IF": [
+        "AXI_B_IF",
+        "uKuWK",
+        "module",
+        5
+    ],
+    "AXI_R_IF": [
+        "AXI_R_IF",
+        "S9yUK",
+        "module",
+        6
+    ],
+    "APB_IF": [
+        "APB_IF",
+        "UnPdR",
+        "module",
+        7
+    ],
+    "DDR_IF": [
+        "DDR_IF",
+        "AE6YB",
+        "module",
+        8
+    ],
+    "DFI_CTRL_IF": [
+        "DFI_CTRL_IF",
+        "pNfhJ",
+        "module",
+        9
+    ],
+    "DFI_WR_IF": [
+        "DFI_WR_IF",
+        "dPEBV",
+        "module",
+        10
+    ],
+    "DFI_RD_IF": [
+        "DFI_RD_IF",
+        "IwxtL",
+        "module",
+        11
+    ],
+    "TIMING_IF": [
+        "TIMING_IF",
+        "ehwLw",
+        "module",
+        12
+    ],
+    "REQ_IF": [
+        "REQ_IF",
+        "da76F",
+        "module",
+        13
+    ],
+    "BK_CTRL_IF": [
+        "BK_CTRL_IF",
+        "C86aY",
+        "module",
+        14
+    ],
+    "SCHED_IF": [
+        "SCHED_IF",
+        "xMrHa",
+        "module",
+        15
+    ],
+    "SAL_CFG": [
+        "SAL_CFG",
+        "CV1WR",
+        "module",
+        16
+    ],
+    "SAL_DDR_CTRL_0000": [
+        "SAL_DDR_CTRL_0000",
+        "m476x",
+        "module",
+        17
+    ],
+    "SAL_SCHED": [
+        "SAL_SCHED",
+        "YEkgK",
+        "module",
+        18
+    ],
+    "SAL_TIMING_CNTR": [
+        "SAL_TIMING_CNTR",
+        "EdPgm",
+        "module",
+        19
+    ],
+    "INV": [
+        "INV",
+        "j2n2f",
+        "module",
+        20
+    ],
+    "AND2": [
+        "AND2",
+        "r8z83",
+        "module",
+        21
+    ],
+    "AND3": [
+        "AND3",
+        "IN2Hd",
+        "module",
+        22
+    ],
+    "NAND2": [
+        "NAND2",
+        "fUJkr",
+        "module",
+        23
+    ],
+    "NAND3": [
+        "NAND3",
+        "iiGpj",
+        "module",
+        24
+    ],
+    "OR2": [
+        "OR2",
+        "CKBi0",
+        "module",
+        25
+    ],
+    "OR3": [
+        "OR3",
+        "Jr5hv",
+        "module",
+        26
+    ],
+    "NOR2": [
+        "NOR2",
+        "AAjLW",
+        "module",
+        27
+    ],
+    "NOR3": [
+        "NOR3",
+        "nIkft",
+        "module",
+        28
+    ],
+    "XOR2": [
+        "XOR2",
+        "CiJyK",
+        "module",
+        29
+    ],
+    "XOR3": [
+        "XOR3",
+        "cwFGd",
+        "module",
+        30
+    ],
+    "XNOR2": [
+        "XNOR2",
+        "WvYQc",
+        "module",
+        31
+    ],
+    "XNOR3": [
+        "XNOR3",
+        "EpfUx",
+        "module",
+        32
+    ],
+    "MUX21": [
+        "MUX21",
+        "z3Bm0",
+        "module",
+        33
+    ],
+    "DFF": [
+        "DFF",
+        "uH58p",
+        "module",
+        34
+    ],
+    "ddr2_dimm": [
+        "ddr2_dimm",
+        "CaZhW",
+        "module",
+        35
+    ],
+    "ddr2_model": [
+        "ddr2_model",
+        "DPzPT",
+        "module",
+        36
+    ],
+    "SAL_TB_TOP": [
+        "SAL_TB_TOP",
+        "Wb9KV",
+        "module",
+        37
+    ],
+    "...MASTER...": [
+        "SIM",
+        "amcQw",
+        "module",
+        38
+    ]
+}
